@@ -8,5 +8,14 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "prisma": "^4.6.1"
+  },
+  "dependencies": {
+    "@prisma/client": "^4.6.1"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  }
 }
