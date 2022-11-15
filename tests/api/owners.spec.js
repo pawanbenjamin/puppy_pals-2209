@@ -6,6 +6,8 @@ const { faker } = require("@faker-js/faker");
 describe("Owners", () => {
   let owners;
   let createdOwner;
+  let fakeOwner;
+  let newOwner;
   beforeAll(async () => {
     owners = await prisma.owners.findMany();
     createdOwner = await prisma.owners.create({
@@ -19,6 +21,31 @@ describe("Owners", () => {
       await prisma.owners.delete({
         where: {
           id: createdOwner.id,
+        },
+      });
+    }
+
+    const fakeOwnerFromDb = await prisma.owners.findFirst({
+      where: {
+        name: fakeOwner.name,
+      },
+    });
+
+    await prisma.owners.delete({
+      where: {
+        id: fakeOwnerFromDb.id,
+      },
+    });
+
+    const newOwnerFromDb = await prisma.owners.findUnique({
+      where: {
+        id: newOwner.id,
+      },
+    });
+    if (newOwnerFromDb) {
+      await prisma.owners.delete({
+        where: {
+          id: newOwner.id,
         },
       });
     }
@@ -39,7 +66,7 @@ describe("Owners", () => {
   });
   describe("POST /api/owners", () => {
     it("Creates an owner in the db", async () => {
-      const fakeOwner = { name: faker.name.fullName() };
+      fakeOwner = { name: faker.name.fullName() };
       const { body } = await request(app).post("/api/owners").send(fakeOwner);
       expect(body.name).toEqual(fakeOwner.name);
     });
@@ -55,7 +82,7 @@ describe("Owners", () => {
   });
   describe("DELETE /api/owners/:ownerId", () => {
     it("Deletes the correct owner from the db", async () => {
-      const newOwner = await prisma.owners.create({
+      newOwner = await prisma.owners.create({
         data: {
           name: faker.name.fullName(),
         },

@@ -6,6 +6,8 @@ const { faker } = require("@faker-js/faker");
 describe("Tricks", () => {
   let tricks;
   let createdTrick;
+  let fakeTrick;
+  let newTrick;
   beforeAll(async () => {
     tricks = await prisma.tricks.findMany();
     createdTrick = await prisma.tricks.create({
@@ -19,6 +21,32 @@ describe("Tricks", () => {
       await prisma.tricks.delete({
         where: {
           id: createdTrick.id,
+        },
+      });
+    }
+
+    const fakeTrickFromDb = await prisma.tricks.findFirst({
+      where: {
+        title: fakeTrick.title,
+      },
+    });
+
+    await prisma.tricks.delete({
+      where: {
+        id: fakeTrickFromDb.id,
+      },
+    });
+
+    const newTrickFromDb = await prisma.tricks.findUnique({
+      where: {
+        id: newTrick.id,
+      },
+    });
+
+    if (newTrickFromDb) {
+      await prisma.tricks.delete({
+        where: {
+          id: newTrick.id,
         },
       });
     }
@@ -39,7 +67,7 @@ describe("Tricks", () => {
   });
   describe("POST /api/tricks", () => {
     it("Creates an owner in the db", async () => {
-      const fakeTrick = { title: faker.word.verb() };
+      fakeTrick = { title: faker.word.verb() };
       const { body } = await request(app).post("/api/tricks").send(fakeTrick);
       expect(body.title).toEqual(fakeTrick.title);
     });
@@ -55,7 +83,7 @@ describe("Tricks", () => {
   });
   describe("DELETE /api/tricks/:trickId", () => {
     it("Deletes the correct owner from the db", async () => {
-      const newTrick = await prisma.tricks.create({
+      newTrick = await prisma.tricks.create({
         data: {
           title: faker.word.verb(),
         },
