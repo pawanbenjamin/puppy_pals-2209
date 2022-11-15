@@ -24,25 +24,11 @@ router.delete(
   "/:puppy_id/:trick_id",
   asyncErrorHandler(async (req, res, next) => {
     const { puppy_id, trick_id } = req.params;
-    const pt = await prisma.puppies_Tricks.findUnique({
+    const pt = await prisma.puppies_Tricks.delete({
       where: {
-        puppy_id: +puppy_id,
-        AND: [
-          {
-            trick_id: +trick_id,
-          },
-        ],
+        puppy_id_trick_id: { puppy_id: +puppy_id, trick_id: +trick_id },
       },
     });
-
-    // const deletedPt = await prisma.puppies_Tricks.delete({
-    //   where: {
-    //     AND: {
-    //       puppy_id: +puppy_id,
-    //       trick_id: +trick_id,
-    //     },
-    //   },
-    // });
     res.send(pt);
   })
 );
