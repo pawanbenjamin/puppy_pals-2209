@@ -1,6 +1,5 @@
 const router = require("express").Router();
 const { asyncErrorHandler } = require("./utils");
-
 const prisma = require("../prisma/prisma");
 
 // GET /api/puppies
