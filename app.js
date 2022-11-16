@@ -1,4 +1,5 @@
 const express = require("express");
+const path = require("path");
 
 const app = express();
 const morgan = require("morgan");
@@ -6,6 +7,7 @@ const morgan = require("morgan");
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(morgan("dev"));
+app.use(express.static(path.join(__dirname, "./client", "dist")));
 
 app.get("/health", (req, res) => {
   res.send("All Healthy Good to Go!");
@@ -14,8 +16,8 @@ app.get("/health", (req, res) => {
 // api routes
 app.use("/api", require("./api"));
 
-app.get("*", (req, res) => {
-  res.status(404).send("Oops can't find that route!");
+app.use((req, res, next) => {
+  res.sendFile(path.join(__dirname, "./client/dist", "index.html"));
 });
 
 app.use((error, req, res, next) => {
