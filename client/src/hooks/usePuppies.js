@@ -8,6 +8,7 @@ export default function usePuppies() {
   );
   const selectedPuppy = useStoreState((state) => state.puppies.selectedPuppy);
   const fetchPuppy = useStoreActions((actions) => actions.puppies.fetchPuppy);
+
   return {
     selectedPuppy,
     fetchPuppy,

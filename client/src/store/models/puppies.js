@@ -11,7 +11,9 @@ export const puppies = {
     const { data } = await axios.get("/api/puppies");
     actions.setPuppies(data);
   }),
-  addPuppy: action((state, payload) => [state.data.push(payload)]),
+  addPuppy: action((state, payload) => {
+    state.data.push(payload);
+  }),
   createPuppy: thunk(async (actions, payload) => {
     const { data } = await axios.post("/api/puppies", payload);
     actions.addPuppy(data);
